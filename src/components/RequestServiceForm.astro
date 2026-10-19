@@ -1,0 +1,139 @@
+---
+// Request Solar Service / Free Estimate Form.
+// Native POST to /api/request-service.
+import { business } from "../data/business";
+---
+<form
+  id="request-service-form"
+  method="POST"
+  action="/api/request-service"
+  class="grid gap-4"
+  data-phone={business.phone}
+>
+  <div class="grid gap-1">
+    <label for="rs-name" class="font-display font-semibold text-sm text-navy">Full Name</label>
+    <input
+      id="rs-name"
+      name="name"
+      required
+      autocomplete="name"
+      placeholder="Your name"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-phone" class="font-display font-semibold text-sm text-navy">Phone Number</label>
+    <input
+      id="rs-phone"
+      name="phone"
+      type="tel"
+      required
+      autocomplete="tel"
+      placeholder="(713) 555-0100"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-email" class="font-display font-semibold text-sm text-navy">
+      Email Address <span class="text-navy/50 font-normal">(optional)</span>
+    </label>
+    <input
+      id="rs-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      placeholder="you@example.com"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-address" class="font-display font-semibold text-sm text-navy">
+      Property Address <span class="text-navy/50 font-normal">(for solar roof modeling)</span>
+    </label>
+    <input
+      id="rs-address"
+      name="address"
+      autocomplete="street-address"
+      placeholder="123 Main St, Houston, TX"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-problem" class="font-display font-semibold text-sm text-navy">Project Details or Average Electric Bill</label>
+    <textarea
+      id="rs-problem"
+      name="problem"
+      required
+      rows="4"
+      placeholder="Tell us about your home, estimated monthly electric bill, or interest in battery storage…"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    ></textarea>
+  </div>
+
+  <input type="hidden" name="lead_source" id="rs-lead-source" value="" />
+
+  <button
+    type="submit"
+    id="rs-submit-btn"
+    class="hp-lift mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-solar px-6 py-3.5 font-display text-base font-bold text-navy shadow-md hover:bg-solar-dark hover:text-white transition-all cursor-pointer"
+  >
+    Submit Solar Request
+  </button>
+
+  <p id="rs-status" class="hidden text-sm font-semibold text-center mt-2" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  // Read attribution cookie
+  try {
+    const cookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("hp_attrib="));
+    if (cookie) {
+      const input = document.getElementById("rs-lead-source") as HTMLInputElement;
+      if (input) {
+        input.value = decodeURIComponent(cookie.split("=")[1]);
+      }
+    }
+  } catch (e) {}
+
+  const form = document.getElementById("request-service-form") as HTMLFormElement;
+  const btn = document.getElementById("rs-submit-btn") as HTMLButtonElement;
+  const status = document.getElementById("rs-status");
+
+  if (form && btn && status) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.innerText = "Submitting…";
+      status.classList.add("hidden");
+
+      try {
+        const formData = new FormData(form);
+        const res = await fetch("/api/request-service", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+          form.reset();
+          btn.classList.add("hidden");
+          status.textContent = "Thank you! Your solar consultation request has been received. Our team will contact you shortly.";
+          status.className = "text-sm font-bold text-emerald-700 bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-center";
+        } else {
+          throw new Error(data.error || "Submission failed");
+        }
+      } catch (err: any) {
+        btn.disabled = false;
+        btn.innerText = "Submit Solar Request";
+        status.textContent = "There was an issue sending your request. Please call us directly at " + form.dataset.phone;
+        status.className = "text-sm font-bold text-amber-800 bg-amber-50 p-4 rounded-xl border border-amber-200 text-center";
+      }
+    });
+  }
+</script>

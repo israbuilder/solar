@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import JobApplicationForm from "../components/JobApplicationForm.astro";
+import { business } from "../data/business";
+
+const perks = [
+  {
+    title: "Booming, Year-Round Solar Work",
+    body: "Texas is leading the nation in solar expansion. Our installation schedule stays busy year-round with competitive pay and steady hours.",
+  },
+  {
+    title: "Fair, Top-Tier Compensation",
+    body: "Competitive wages, performance bonuses, and safety incentives that reward craft excellence, craftsmanship, and reliability.",
+  },
+  {
+    title: "NABCEP & Electrical Certification",
+    body: "We invest in our people. Get paid on-the-job training, apprenticeship hours, and company sponsorship for NABCEP certifications.",
+  },
+  {
+    title: "Safety-First Culture",
+    body: "State-of-the-art fall protection, premium tools, and a crew culture where safety and mutual respect always come first.",
+  },
+];
+---
+<BaseLayout
+  title={`Careers — Join the ${business.name} Team | Houston, TX`}
+  description={`Now hiring solar installers, journeyman electricians, and battery technicians in Houston, TX. Apply to join ${business.name} — competitive pay, training, and career growth.`}
+  path="/careers"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-solar">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-solar-light uppercase tracking-[0.2em] text-sm">Join the Clean Energy Transition</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Careers at {business.name}</h1>
+      <p class="mt-3 text-white/80 text-lg max-w-2xl leading-relaxed">
+        We're building the most respected solar team in Texas. If you're dependable, skilled, and take pride in clean craftsmanship, we want to hear from you.
+      </p>
+    </div>
+  </section>
+
+  <!-- Perks -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="font-display font-black text-3xl text-navy">Why Build Your Career at {business.name}?</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      {perks.map((perk) => (
+        <div class="bg-cream rounded-3xl border border-navy/10 shadow-sm p-8">
+          <h3 class="font-display font-bold text-xl text-navy">{perk.title}</h3>
+          <p class="mt-2 text-navy/70 leading-relaxed">{perk.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Application Section -->
+  <section class="bg-cream border-y border-navy/10">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <div class="grid gap-12 md:grid-cols-2 md:items-start">
+        <div>
+          <h2 class="font-display font-black text-3xl text-navy">Apply Today</h2>
+          <p class="mt-3 text-navy/70 text-lg leading-relaxed">
+            Fill out the form with your contact info and experience. Our hiring manager reviews all submissions within 48 hours.
+          </p>
+          <div class="mt-8 bg-white border border-navy/10 rounded-2xl p-6 shadow-sm">
+            <h3 class="font-display font-bold text-base text-navy">Questions about open positions?</h3>
+            <p class="mt-1 text-sm text-navy/70">Reach out to our office at {business.phone} or email {business.email}.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-navy/10 shadow-sm p-8">
+          <JobApplicationForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

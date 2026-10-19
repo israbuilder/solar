@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+
+const links = [
+  { href: "/services", label: "Solar Services" },
+  { href: "/areas-we-serve", label: "Areas We Serve" },
+  { href: "/coupons", label: "Incentives & Coupons" },
+  { href: "/blog", label: "Solar Blog" },
+  { href: "/contact", label: "Contact Us" },
+];
+---
+<BaseLayout
+  title={`Page Not Found | ${business.name}`}
+  description={`The requested page could not be found. Explore ${business.name}'s solar panel installations, battery backup systems, and service areas across Houston.`}
+  path="/404"
+>
+  <section class="px-6 py-24 text-center">
+    <div class="max-w-2xl mx-auto">
+      <p class="font-display font-black text-7xl text-solar">404</p>
+      <h1 class="mt-4 font-display font-black text-3xl sm:text-4xl text-navy">Energy Disconnected — Page Not Found</h1>
+      <p class="mt-4 text-navy/70 text-lg leading-relaxed">
+        We couldn't find the page you were looking for. Explore one of our main sections below, or call our Houston solar team at
+        <a href={business.phoneHref} class="font-bold text-solar-dark hover:text-navy transition-colors">{business.phone}</a>.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {links.map((l) => (
+          <a href={l.href} class="hp-lift bg-white border border-navy/10 rounded-xl px-5 py-3 font-display font-bold text-navy shadow-sm hover:border-solar hover:text-solar-dark transition-colors">{l.label}</a>
+        ))}
+      </div>
+      <div class="mt-9 flex justify-center"><ScheduleButton class="px-7 py-3.5 text-lg" /></div>
+    </div>
+  </section>
+</BaseLayout>

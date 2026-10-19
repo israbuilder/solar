@@ -1,0 +1,58 @@
+export const business = {
+  name: "Solar Pro Houston",
+  legalName: "Houston Solar Solutions LLC / Solar Pro",
+  founder: "Israel Zepeda",
+  email: "houstonitbrenda@gmail.com",
+  phone: "(346) 477-8912",
+  phoneHref: "tel:+13464778912",
+  url: "https://houstonitsecurity.net",
+  address: "1927 W. McKinney St., Houston, TX 77019",
+  // Structured address for schema.org PostalAddress
+  addressParts: {
+    street: "1927 W. McKinney St.",
+    city: "Houston",
+    state: "TX",
+    zip: "77019",
+  },
+  areaServed: "Houston, TX",
+  areaServedList: [
+    "Houston, TX",
+    "Katy, TX",
+    "Cypress, TX",
+    "Bellaire, TX",
+    "Spring Branch, Houston, TX",
+    "The Heights, Houston, TX",
+    "Sugar Land, TX",
+    "Humble, TX",
+    "Kingwood, TX",
+    "Spring, TX",
+    "The Woodlands, TX",
+    "Pearland, TX",
+    "Pasadena, TX",
+    "Missouri City, TX",
+  ],
+  // Coordinates for 1927 W. McKinney St., Houston, TX 77019
+  geo: { lat: 29.7587896, lng: -95.3895541 },
+  // schema.org priceRange hint
+  priceRange: "$$$",
+  license: "NABCEP Certified & Licensed Electrical Contractor",
+  logo: "/images/logo.png",
+  yearFounded: 2018,
+  yearsTrusted: "6+",
+  trustedPhrase: "Clean, Reliable Solar Power & Battery Storage You Can Trust",
+  hours: "Mo-Sa 07:00-20:00",
+  hoursDisplay: "Mon - Sat: 7:00 AM - 8:00 PM | 24/7 Emergency Storm Support",
+  socials: {
+    facebook: "https://houstonitsecurity.net",
+    instagram: "https://houstonitsecurity.net",
+    google: "https://www.google.com/maps?q=1927+W+McKinney+St,+Houston,+TX+77019",
+    tiktok: "https://houstonitsecurity.net",
+    youtube: "https://houstonitsecurity.net"
+  },
+  rating: { value: "5.0", count: "84" },
+  booking: {
+    pageUrl: "/contact",
+    widgetToken: "",
+    orgName: "Solar-Pro-Houston",
+  },
+} as const;

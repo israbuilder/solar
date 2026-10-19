@@ -1,0 +1,264 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { business } from "../data/business";
+import { reviews } from "../data/reviews";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  ogType?: string;
+  includeReviews?: boolean;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+  title = `${business.name} | Houston Solar Panel Installation & Battery Backup`,
+  description = `Houston's trusted solar energy contractor. ${business.name} provides high-efficiency solar panel installation, Tesla & Enphase battery backups, and commercial solar across Greater Houston.`,
+  path = "",
+  image = "/images/placeholder.jpeg",
+  ogType = "website",
+  includeReviews = false,
+  jsonLd,
+} = Astro.props;
+
+const canonical = new URL(path, business.url).href;
+const extraSchemas = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+
+// Primary LocalBusiness Schema
+const schema: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "@id": `${business.url}/#business`,
+  name: business.name,
+  legalName: business.legalName,
+  url: business.url,
+  logo: `${business.url}${business.logo}`,
+  image: `${business.url}${image}`,
+  description,
+  telephone: business.phone,
+  email: business.email,
+  priceRange: business.priceRange,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: business.addressParts.street,
+    addressLocality: business.addressParts.city,
+    addressRegion: business.addressParts.state,
+    postalCode: business.addressParts.zip,
+    addressCountry: "US",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: business.geo.lat,
+    longitude: business.geo.lng,
+  },
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "07:00",
+      closes: "20:00",
+    },
+  ],
+  areaServed: business.areaServedList.map((area) => ({
+    "@type": "AdministrativeArea",
+    name: area,
+  })),
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Solar & Clean Energy Services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Residential Solar Panel Installation",
+          serviceType: "Residential Solar Installation",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/residential-solar-installation`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Solar Battery Storage & Backup",
+          serviceType: "Home Battery Backup",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/solar-battery-storage`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Commercial Solar Energy Systems",
+          serviceType: "Commercial Solar Energy",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/commercial-solar-systems`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Solar Panel Repair & Maintenance",
+          serviceType: "Solar Diagnostics and Repair",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/solar-panel-repair-and-maintenance`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "EV Charger Solar Integration",
+          serviceType: "EV Charger Installation",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/ev-charger-solar-integration`,
+        },
+      },
+    ],
+  },
+  sameAs: [business.socials.facebook, business.socials.instagram, business.socials.google],
+  ...(includeReviews
+    ? {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: business.rating.value,
+          reviewCount: business.rating.count,
+          bestRating: "5",
+          worstRating: "1",
+        },
+        review: reviews.map((r) => ({
+          "@type": "Review",
+          author: { "@type": "Person", name: r.name },
+          datePublished: r.date,
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: r.rating,
+            bestRating: 5,
+            worstRating: 1,
+          },
+          reviewBody: r.body,
+        })),
+      }
+    : {}),
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/images/fav.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image.startsWith("http") ? image : business.url + image} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={business.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image.startsWith("http") ? image : business.url + image} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    {extraSchemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+    <script is:inline>
+      (function () {
+        try {
+          var p = new URLSearchParams(location.search);
+          var click =
+            p.get("oppref") ||
+            p.get("gclid") ||
+            p.get("msclkid") ||
+            p.get("fbclid");
+          var hasUtm =
+            p.get("utm_source") || p.get("utm_medium") || p.get("utm_campaign");
+          var data = null;
+          if (hasUtm || click) {
+            data = {
+              src:
+                p.get("utm_source") ||
+                (p.get("oppref")
+                  ? "openai"
+                  : p.get("gclid")
+                    ? "google"
+                    : p.get("msclkid")
+                      ? "bing"
+                      : "facebook"),
+              med: p.get("utm_medium") || "cpc",
+              camp: p.get("utm_campaign") || "",
+              cont: p.get("utm_content") || "",
+              lp: location.pathname,
+              d: new Date().toISOString().slice(0, 10),
+            };
+          } else if (
+            document.referrer &&
+            document.cookie.indexOf("hp_attrib=") === -1
+          ) {
+            var ref = new URL(document.referrer);
+            if (ref.hostname && ref.hostname !== location.hostname) {
+              data = {
+                src: ref.hostname.replace(/^www\./, ""),
+                med: "referral",
+                camp: "",
+                cont: "",
+                lp: location.pathname,
+                d: new Date().toISOString().slice(0, 10),
+              };
+            }
+          }
+          if (data) {
+            document.cookie =
+              "hp_attrib=" +
+              encodeURIComponent(JSON.stringify(data)) +
+              "; path=/; max-age=7776000; SameSite=Lax";
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:left-4 focus:top-4 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white focus:shadow-lg"
+    >
+      Skip to main content
+    </a>
+    <Header />
+    <main id="main" class="flex-1"><slot /></main>
+    <Footer />
+  </body>
+</html>

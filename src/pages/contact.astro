@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import RequestServiceForm from "../components/RequestServiceForm.astro";
+import { business } from "../data/business";
+---
+<BaseLayout
+  title={`Contact ${business.name} — Houston Solar Energy Specialists`}
+  description={`Contact ${business.name} in Houston, TX. Schedule a free solar consultation online, call us at ${business.phone}, or submit a quote request.`}
+  path="/contact"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-solar">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-solar-light uppercase tracking-[0.2em] text-sm">We're Ready to Help</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Contact {business.name}</h1>
+      <p class="mt-3 text-white/80 text-lg max-w-2xl leading-relaxed">
+        Ready to take control of your energy costs? Schedule a consultation online, call our Houston team directly, or request a customized solar proposal.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <div class="grid gap-12 md:grid-cols-2">
+      <!-- Contact details -->
+      <div class="space-y-8">
+        <div class="bg-white rounded-3xl border border-navy/10 shadow-sm p-8">
+          <h2 class="font-display font-bold text-2xl text-navy">Schedule Online</h2>
+          <p class="mt-2 text-navy/70 leading-relaxed">Book a personalized video or in-person solar consultation with our engineering team.</p>
+          <div class="mt-6"><ScheduleButton class="px-7 py-3.5" /></div>
+        </div>
+
+        <div class="bg-navy text-white rounded-3xl p-8 shadow-md border-t-4 border-solar">
+          <h2 class="font-display font-bold text-xl text-solar-light">Direct Phone Line</h2>
+          <a href={business.phoneHref} class="mt-3 block font-display font-black text-3xl sm:text-4xl hover:text-solar-light transition-colors">
+            {business.phone}
+          </a>
+          <p class="mt-2 text-sm text-solar-light font-semibold">{business.hoursDisplay}</p>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-navy/10 shadow-sm p-8">
+          <h2 class="font-display font-bold text-2xl text-navy">Office &amp; Service Hub</h2>
+          <p class="mt-2 text-navy/70">{business.address}</p>
+          <p class="mt-1 text-sm text-navy/50">Serving {business.areaServed} &amp; surrounding Texas counties</p>
+        </div>
+      </div>
+
+      <!-- Request service form -->
+      <div class="bg-cream rounded-3xl border border-navy/10 shadow-sm p-8 sm:p-10">
+        <h2 class="font-display font-bold text-2xl text-navy">Request a Free Solar Quote</h2>
+        <p class="mt-2 mb-6 text-navy/70">
+          Provide your property details and average electric bill. We'll generate a custom lidar solar production estimate.
+        </p>
+        <RequestServiceForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

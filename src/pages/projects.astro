@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+
+const projects = [
+  { src: "/images/placeholder.jpeg", alt: `${business.name} residential solar installation in Katy`, feature: true, title: "14.4 kW Katy Rooftop System with Tesla Powerwall" },
+  { src: "/images/placeholder.jpeg", alt: `${business.name} commercial solar system in Cypress`, title: "45 kW Cypress Commercial Warehouse Array" },
+  { src: "/images/placeholder.jpeg", alt: `${business.name} low profile solar installation in The Heights`, title: "All-Black Architectural Array in The Heights" },
+  { src: "/images/placeholder.jpeg", alt: `${business.name} ground mount and EV charger in Sugar Land`, title: "Solar Array + Level 2 EV Charger in Sugar Land" },
+  { src: "/images/placeholder.jpeg", alt: `${business.name} battery backup system in The Woodlands`, title: "Whole-Home Battery Backup in The Woodlands" },
+];
+---
+<BaseLayout
+  title={`Solar Projects Gallery | ${business.name} Houston`}
+  description={`Browse completed residential and commercial solar installations, battery backups, and EV chargers completed by ${business.name} across Houston, TX.`}
+  path="/projects"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-solar">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-solar-light uppercase tracking-[0.2em] text-sm">Real Texas Installations</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Our Solar Projects &amp; Work</h1>
+      <p class="mt-4 text-white/80 text-lg max-w-2xl leading-relaxed">
+        Explore recent solar power systems, battery backup deployments, and smart electrical integrations designed and installed across Greater Houston.
+      </p>
+    </div>
+  </section>
+
+  <section class="px-6 py-16 max-w-6xl mx-auto">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((p) => (
+        <div class={`hp-zoom hp-lift bg-white rounded-3xl overflow-hidden shadow-sm border border-navy/10 ${p.feature ? "sm:col-span-2 lg:col-span-2" : ""}`}>
+          <img
+            src={p.src}
+            alt={p.alt}
+            width="800"
+            height="600"
+            loading="lazy"
+            class={`w-full object-cover ${p.feature ? "h-80 sm:h-96" : "h-72"}`}
+          />
+          <div class="p-6">
+            <h3 class="font-display font-bold text-lg text-navy">{p.title}</h3>
+            <p class="text-xs text-navy/60 mt-1">Installed by {business.name} certified electricians</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-16 text-center bg-cream border border-navy/10 rounded-3xl p-10 sm:p-12 shadow-sm">
+      <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-navy">Ready to Power Your Property With Sunshine?</h2>
+      <p class="mt-3 text-navy/70 max-w-xl mx-auto leading-relaxed">
+        Let our engineers run a free 3D solar model of your roof and calculate your estimated monthly savings.
+      </p>
+      <div class="mt-7 flex justify-center"><ScheduleButton class="px-8 py-4 text-lg" /></div>
+    </div>
+  </section>
+</BaseLayout>

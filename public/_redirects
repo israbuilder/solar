@@ -1,0 +1,7 @@
+# Solar Pro Houston — Netlify / Hosting 301 Redirects
+
+# --- Main pages canonical aliases ---
+/home              /                301
+/our-blog          /blog            301
+/request-service   /contact         301
+/recent-projects   /projects        301

@@ -1,0 +1,112 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+import { areas } from "../data/areas";
+
+const allHoustonZips = [
+  "77002", "77003", "77004", "77005", "77006", "77007", "77008", "77009", "77010",
+  "77011", "77012", "77014", "77015", "77017", "77018", "77019", "77020", "77021",
+  "77022", "77023", "77024", "77025", "77027", "77029", "77030", "77031", "77032",
+  "77034", "77035", "77036", "77037", "77038", "77039", "77040", "77041", "77042",
+  "77043", "77044", "77045", "77046", "77047", "77049", "77050", "77053", "77054",
+  "77055", "77056", "77057", "77058", "77059", "77061", "77062", "77063", "77064",
+  "77065", "77066", "77067", "77068", "77069", "77070", "77071", "77073", "77074",
+  "77075", "77076", "77077", "77078", "77079", "77080", "77081", "77082", "77083",
+  "77084", "77085", "77086", "77087", "77088", "77089", "77090", "77091", "77092",
+  "77094", "77095", "77096", "77098", "77099",
+];
+
+const surrounding = [
+  { city: "Katy", zips: ["77449", "77450", "77493", "77494"] },
+  { city: "Cypress", zips: ["77429", "77433"] },
+  { city: "Sugar Land", zips: ["77478", "77479", "77498"] },
+  { city: "The Woodlands", zips: ["77380", "77381", "77382", "77384", "77385"] },
+  { city: "Pearland", zips: ["77581", "77584"] },
+  { city: "Spring", zips: ["77373", "77379", "77386", "77388", "77389"] },
+  { city: "Humble", zips: ["77338", "77346", "77396"] },
+  { city: "Kingwood", zips: ["77339", "77345"] },
+  { city: "Missouri City", zips: ["77459", "77489"] },
+  { city: "Pasadena", zips: ["77502", "77503", "77504", "77505"] },
+];
+---
+<BaseLayout
+  title={`Solar Service Areas in Greater Houston, TX | ${business.name}`}
+  description={`${business.name} installs residential and commercial solar panels and battery storage systems across Houston, Katy, Cypress, Sugar Land, The Woodlands, Pearland, and surrounding cities.`}
+  path="/areas-we-serve"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-solar">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-solar-light uppercase tracking-[0.2em] text-sm">Texas Clean Energy Coverage</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Areas We Serve in Greater Houston</h1>
+      <p class="mt-4 text-white/80 text-lg max-w-2xl leading-relaxed">
+        Providing certified solar panel engineering, battery backup installations, and utility interconnection across Harris, Fort Bend, and Montgomery counties.
+      </p>
+    </div>
+  </section>
+
+  <section class="px-6 py-16 max-w-5xl mx-auto">
+    <!-- Featured Neighborhoods / Dedicated Hubs -->
+    <h2 class="font-display font-black text-3xl text-navy">Dedicated Community Hubs</h2>
+    <p class="mt-2 text-navy/70">Click on your city or neighborhood below to explore local solar regulations, HOA guidelines, and utility savings:</p>
+    
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {areas.map((a) => (
+        <a
+          href={`/areas/${a.slug}`}
+          class="hp-lift group bg-white border border-navy/10 rounded-2xl p-6 shadow-sm hover:border-solar hover:shadow-lg transition-all"
+        >
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-lg text-navy group-hover:text-solar-dark transition-colors">
+              Solar in {a.name}
+            </h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-solar"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+          <p class="text-xs text-navy/60 mt-2 line-clamp-2">{a.intro[0]}</p>
+        </a>
+      ))}
+    </div>
+
+    <!-- Surrounding Cities -->
+    <div class="mt-16 pt-12 border-t border-navy/10">
+      <h2 class="font-display font-black text-2xl sm:text-3xl text-navy">Surrounding Communities Covered</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {surrounding.map((s) => (
+          <div class="bg-cream border border-navy/10 rounded-2xl p-6 shadow-sm">
+            <h3 class="font-display font-bold text-lg text-navy">{s.city}, TX</h3>
+            <p class="mt-2 text-xs text-navy/60">ZIP Codes Served:</p>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              {s.zips.map((zip) => (
+                <span class="text-xs font-mono font-semibold bg-white border border-navy/10 px-2 py-0.5 rounded text-navy/80">
+                  {zip}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- City of Houston ZIPs -->
+    <div class="mt-16 pt-12 border-t border-navy/10">
+      <h2 class="font-display font-black text-2xl text-navy">Houston ZIP Codes Served</h2>
+      <p class="mt-2 text-navy/70 text-sm">We provide full residential and commercial solar installations across the following Houston ZIP codes:</p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {allHoustonZips.map((z) => (
+          <span class="text-xs font-mono bg-white border border-navy/10 px-2.5 py-1 rounded-md text-navy/70">
+            {z}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-16 bg-navy text-white rounded-3xl p-8 sm:p-12 text-center border-t-4 border-solar shadow-xl">
+      <h2 class="font-display font-black text-2xl sm:text-3xl">Don't See Your Neighborhood Listed?</h2>
+      <p class="mt-3 text-white/80 max-w-xl mx-auto">
+        If you reside in the Greater Houston or Texas Gulf Coast region, our solar team likely serves your area. Call {business.phone} to check service availability.
+      </p>
+      <div class="mt-7 flex justify-center"><ScheduleButton class="px-8 py-4 text-lg" /></div>
+    </div>
+  </section>
+</BaseLayout>

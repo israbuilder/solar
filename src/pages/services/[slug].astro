@@ -1,0 +1,148 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ScheduleButton from "../../components/ScheduleButton.astro";
+import { business } from "../../data/business";
+
+export async function getStaticPaths() {
+  const services = await getCollection("services");
+  return services.map((svc) => ({ params: { slug: svc.id }, props: { svc } }));
+}
+
+const { svc } = Astro.props;
+const { Content } = await render(svc);
+
+// Related services for cross-linking
+const others = (await getCollection("services"))
+  .filter((s) => s.id !== svc.id)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: svc.data.h1,
+  description: svc.data.description,
+  serviceType: svc.data.h1,
+  areaServed: business.areaServedList,
+  provider: {
+    "@type": "HomeAndConstructionBusiness",
+    "@id": `${business.url}/#business`,
+    name: business.name,
+    telephone: business.phone,
+    url: business.url,
+  },
+  url: `${business.url}/services/${svc.id}`,
+};
+
+const faqSchema = svc.data.faq?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: svc.data.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    }
+  : null;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: business.url },
+    { "@type": "ListItem", position: 2, name: "Services", item: `${business.url}/services` },
+    { "@type": "ListItem", position: 3, name: svc.data.h1, item: `${business.url}/services/${svc.id}` },
+  ],
+};
+---
+<BaseLayout
+  title={svc.data.title}
+  description={svc.data.description}
+  path={`/services/${svc.id}`}
+  jsonLd={[serviceSchema, breadcrumbSchema, faqSchema].filter(Boolean)}
+>
+  <!-- Header -->
+  <section class="bg-navy text-white border-b-4 border-solar">
+    <div class="max-w-4xl mx-auto px-6 py-14">
+      <a href="/services" class="font-display font-bold text-solar-light text-sm hover:text-white transition-colors">
+        ← All solar services
+      </a>
+      <h1 class="hp-rise mt-4 font-display font-black text-3xl sm:text-5xl leading-tight">
+        {svc.data.h1}
+      </h1>
+      <p class="mt-4 text-white/85 text-lg max-w-2xl leading-relaxed">
+        {svc.data.summary}
+      </p>
+      <div class="mt-7 flex flex-col sm:flex-row gap-3">
+        <a
+          href={business.phoneHref}
+          class="hp-lift inline-flex items-center justify-center gap-2 rounded-xl bg-solar px-6 py-3.5 font-display text-base font-bold text-navy shadow-md hover:bg-solar-dark hover:text-white transition-colors"
+        >
+          Call {business.phone}
+        </a>
+        <ScheduleButton class="px-6 py-3.5" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <article class="max-w-4xl mx-auto px-6 py-14">
+    <div class="prose max-w-none text-navy/90">
+      <Content />
+    </div>
+
+    <!-- FAQs -->
+    {svc.data.faq && svc.data.faq.length > 0 && (
+      <div class="mt-14 pt-10 border-t border-navy/10">
+        <h2 class="font-display font-black text-2xl sm:text-3xl text-navy mb-6">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {svc.data.faq.map((item) => (
+            <div class="bg-cream border border-navy/10 rounded-2xl p-6 shadow-sm">
+              <h3 class="font-display font-bold text-lg text-navy">{item.q}</h3>
+              <p class="mt-2 text-navy/70 leading-relaxed text-sm sm:text-base">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Related Services -->
+    <div class="mt-16 pt-10 border-t border-navy/10">
+      <h2 class="font-display font-black text-2xl text-navy mb-6">Explore Other Services</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {others.map((other) => (
+          <a
+            href={`/services/${other.id}`}
+            class="hp-lift group p-5 rounded-2xl bg-white border border-navy/10 hover:border-solar shadow-sm flex items-center justify-between"
+          >
+            <div>
+              <p class="font-display font-bold text-navy group-hover:text-solar-dark transition-colors">{other.data.h1}</p>
+              <p class="text-xs text-navy/60 line-clamp-1 mt-0.5">{other.data.summary}</p>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-solar shrink-0 ml-3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA Box -->
+    <div class="mt-16 bg-navy text-white rounded-3xl p-8 sm:p-12 text-center border-t-4 border-solar shadow-xl">
+      <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-solar-light">Clean Energy Partner</span>
+      <h2 class="mt-2 font-display font-black text-2xl sm:text-3xl">Switch to Solar With 25-Year Warranty Protection</h2>
+      <p class="mt-3 text-white/80 max-w-xl mx-auto">
+        Find out how much you can save with a custom solar analysis tailored to your Houston home or business.
+      </p>
+      <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href={business.phoneHref}
+          class="hp-lift inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-solar px-7 py-3.5 font-display text-base font-bold text-navy shadow-md hover:bg-solar-dark hover:text-white transition-colors"
+        >
+          Call {business.phone}
+        </a>
+        <ScheduleButton class="w-full sm:w-auto px-7 py-3.5" />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,152 @@
+---
+// src/pages/blog/index.astro
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { business } from "../../data/business";
+import { getPosts, formatPostDate } from "../../lib/blog-api";
+import ScheduleButton from "../../components/ScheduleButton.astro";
+
+const FALLBACK_IMAGE = "/images/placeholder.jpeg";
+
+// Dynamic API fetch from Headless CMS
+const postsResponse = await getPosts({ per_page: 12, page: 1 });
+const posts = postsResponse.data || [];
+---
+<BaseLayout
+  title={`Solar Blog & Clean Energy Guides | ${business.name}`}
+  description={`Expert solar advice, Texas grid insights, battery backup guides, and financial incentives from ${business.name}.`}
+  path="/blog"
+>
+  <!-- Main Header Banner -->
+  <section class="bg-navy text-white border-b-4 border-solar">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <div class="flex items-center gap-2 font-display text-xs font-bold uppercase tracking-[0.2em] text-solar-light">
+        <span class="h-2 w-2 rounded-full bg-solar"></span>
+        Solar Energy &amp; Storage Advice
+      </div>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">
+        {business.name} Blog
+      </h1>
+      <p class="mt-4 max-w-2xl text-white/80 text-lg">
+        In-depth guides, energy savings tips, and local Texas clean energy insight from our certified solar specialists.
+      </p>
+    </div>
+  </section>
+
+  <!-- Dynamic Articles Grid -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    {posts.length > 0 ? (
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => {
+          const formattedDate = formatPostDate(post.published_at);
+          const imageUrl = post.featured_image_url || FALLBACK_IMAGE;
+
+          return (
+            <article class="hp-lift group bg-white rounded-2xl overflow-hidden border border-navy/10 shadow-sm hover:shadow-xl hover:border-solar/40 flex flex-col transition-all duration-300">
+              <a href={`/blog/${post.slug}`} class="hp-zoom block relative aspect-[16/10] bg-navy-800/5 overflow-hidden">
+                <img
+                  src={imageUrl}
+                  alt={post.title}
+                  width="600"
+                  height="375"
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  onerror={`this.onerror=null;this.src='${FALLBACK_IMAGE}';`}
+                />
+              </a>
+
+              <div class="p-6 flex flex-col flex-1">
+                {formattedDate && (
+                  <div class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-solar-dark mb-3">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                      <line x1="16" x2="16" y1="2" y2="6" />
+                      <line x1="8" x2="8" y1="2" y2="6" />
+                      <line x1="3" x2="21" y1="10" y2="10" />
+                    </svg>
+                    <time datetime={post.published_at ?? ""}>{formattedDate}</time>
+                  </div>
+                )}
+
+                <h2 class="font-display font-bold text-xl text-navy group-hover:text-solar-dark transition-colors leading-snug">
+                  <a href={`/blog/${post.slug}`}>
+                    {post.title}
+                  </a>
+                </h2>
+
+                {post.excerpt && (
+                  <p class="mt-3 text-sm text-navy/70 leading-relaxed line-clamp-3 flex-1">
+                    {post.excerpt}
+                  </p>
+                )}
+
+                <div class="mt-6 pt-4 border-t border-navy/5 flex items-center justify-between">
+                  <a
+                    href={`/blog/${post.slug}`}
+                    class="inline-flex items-center gap-1.5 font-display text-sm font-bold text-electric hover:text-navy transition-colors"
+                  >
+                    Read article
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="max-w-2xl mx-auto text-center py-16 px-6 bg-white border border-navy/10 rounded-3xl shadow-sm">
+        <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-solar/10 text-solar-dark mb-5">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </div>
+        <h2 class="font-display font-black text-2xl text-navy">No Articles Available Yet</h2>
+        <p class="mt-3 text-navy/70 leading-relaxed">
+          We are currently preparing solar guides, Texas utility savings breakdowns, and battery backup case studies. Please check back soon or reach out directly to schedule a solar evaluation.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href={business.phoneHref}
+            class="hp-lift inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-navy px-6 py-3.5 font-display text-base font-bold text-white shadow-md hover:bg-navy-700 transition-colors"
+          >
+            Call {business.phone}
+          </a>
+          <ScheduleButton class="w-full sm:w-auto px-6 py-3.5" />
+        </div>
+      </div>
+    )}
+
+    <!-- Solar Consultation CTA Banner -->
+    <div class="mt-20 rounded-3xl bg-navy p-8 sm:p-12 text-white shadow-xl relative overflow-hidden border-t-4 border-solar">
+      <div class="relative z-10 max-w-2xl">
+        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-solar-light">Clean Energy Independence</span>
+        <h2 class="mt-2 font-display font-black text-2xl sm:text-3xl">Ready to Switch to Solar &amp; Battery Backup?</h2>
+        <p class="mt-3 text-white/80">
+          Our certified engineers provide free roof scans, customized kilowatt-hour modeling, and full utility interconnection support across Greater Houston.
+        </p>
+        <div class="mt-7 flex flex-wrap items-center gap-4">
+          <a
+            href={business.phoneHref}
+            class="hp-lift inline-flex items-center gap-2 rounded-xl bg-solar px-7 py-3.5 font-display text-base font-bold text-navy shadow-lg hover:bg-solar-dark hover:text-white transition-colors"
+          >
+            Call {business.phone}
+          </a>
+          <ScheduleButton class="px-7 py-3.5" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

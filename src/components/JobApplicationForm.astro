@@ -1,0 +1,113 @@
+---
+// Job application form — submitted via Netlify Forms (native multipart POST).
+import { business } from "../data/business";
+
+const positions = [
+  "Lead Solar Installer",
+  "Licensed Solar Journeyman Electrician",
+  "Solar Battery Technician",
+  "Roofing & Mounting Specialist",
+  "Solar Energy Consultant",
+  "Project Coordinator / Office",
+  "Apprentice / Helper",
+];
+---
+<form
+  id="job-application-form"
+  name="job-application"
+  method="POST"
+  action="/apply-received"
+  enctype="multipart/form-data"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="grid gap-4"
+  data-phone={business.phone}
+>
+  <input type="hidden" name="form-name" value="job-application" />
+  <p class="hidden">
+    <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+  </p>
+
+  <div class="grid gap-1">
+    <label for="ja-name" class="font-display font-semibold text-sm text-navy">Full Name</label>
+    <input
+      id="ja-name"
+      name="name"
+      required
+      autocomplete="name"
+      placeholder="Your name"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    />
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-1">
+      <label for="ja-phone" class="font-display font-semibold text-sm text-navy">Phone Number</label>
+      <input
+        id="ja-phone"
+        name="phone"
+        type="tel"
+        required
+        autocomplete="tel"
+        placeholder="(713) 555-0100"
+        class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+      />
+    </div>
+
+    <div class="grid gap-1">
+      <label for="ja-email" class="font-display font-semibold text-sm text-navy">Email Address</label>
+      <input
+        id="ja-email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder="you@example.com"
+        class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+      />
+    </div>
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-position" class="font-display font-semibold text-sm text-navy">Position of Interest</label>
+    <select
+      id="ja-position"
+      name="position"
+      required
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    >
+      <option value="" disabled selected>Select a role…</option>
+      {positions.map((pos) => (
+        <option value={pos}>{pos}</option>
+      ))}
+    </select>
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-experience" class="font-display font-semibold text-sm text-navy">Years of Solar or Electrical Experience</label>
+    <input
+      id="ja-experience"
+      name="experience"
+      placeholder="e.g. 3 years rooftop solar, NABCEP PV Associate, etc."
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-notes" class="font-display font-semibold text-sm text-navy">Tell us about yourself</label>
+    <textarea
+      id="ja-notes"
+      name="notes"
+      rows="3"
+      placeholder="Why do you want to join Solar Pro Houston?"
+      class="border border-navy/20 bg-white px-3.5 py-2.5 rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-solar focus:border-solar transition"
+    ></textarea>
+  </div>
+
+  <button
+    type="submit"
+    class="hp-lift mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-solar px-6 py-3.5 font-display text-base font-bold text-navy shadow-md hover:bg-solar-dark hover:text-white transition-all cursor-pointer"
+  >
+    Submit Application
+  </button>
+</form>
